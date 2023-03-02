@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UpdateExсeption;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -42,6 +43,8 @@ public class FilmController {
         int id = film.getId();
         if (films.containsKey(id)) {
             films.put(id, film);
+        } else {
+            throw new UpdateExсeption("Фильм с Id= " + film.getId() + " не существует");
         }
         log.info("Обновлен фильм: {}", film);
         return film;

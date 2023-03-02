@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.UpdateExсeption;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -41,6 +42,9 @@ public class UserController {
         int id = user.getId();
         if (users.containsKey(id)) {
             users.put(id, user);
+
+        } else {
+            throw new UpdateExсeption("пользователь с Id= " + user.getId() + " не существует");
         }
         log.info("Обновлен пользователь: {}", user);
         return user;
