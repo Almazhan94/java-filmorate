@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
@@ -62,18 +63,18 @@ public class FilmService {
         if (count == 10) {
             if (filmsHashMapSize <= 10) {
                 filmSet.addAll(films);
-                return filmSet.stream().toList();
+                return new ArrayList<>(filmSet);
             } else {
                 filmSet.addAll(films);
-                return filmSet.stream().limit(count).toList();
+                return filmSet.stream().limit(count).collect(Collectors.toList());
             }
         }
            else if (count > filmsHashMapSize) {
             filmSet.addAll(films);
-            return filmSet.stream().limit(filmsHashMapSize).toList();
+            return filmSet.stream().limit(filmsHashMapSize).collect(Collectors.toList());
         } else if (count <= filmsHashMapSize) {
             filmSet.addAll(films);
         }
-        return filmSet.stream().limit(count).toList();
+        return filmSet.stream().limit(count).collect(Collectors.toList());
     }
 }
