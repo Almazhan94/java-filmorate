@@ -4,6 +4,7 @@ package ru.yandex.practicum.filmorate.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
@@ -36,45 +37,39 @@ public class FilmService {
         this.inMemoryUserStorage = inMemoryUserStorage;
     }
 
-    public Film addLike(int filmId, int userId){
-        if (inMemoryFilmStorage.films.containsKey(filmId) && inMemoryUserStorage.users.containsKey(userId)) {
-            inMemoryFilmStorage.films.get(filmId).addLike(userId);
-            return inMemoryFilmStorage.films.get(filmId);
-        } else {
-            throw new FilmNotFoundException("Фильм не найден");
-        }
-    }
-
-    public Film deleteLike(int filmId, int userId){
-        if (inMemoryFilmStorage.films.containsKey(filmId)
-                && inMemoryUserStorage.users.containsKey(userId)
-                && inMemoryFilmStorage.films.get(filmId).getLikes().contains(userId)) {
-            inMemoryFilmStorage.films.get(filmId).getLikes().remove(userId);
-            return inMemoryFilmStorage.films.get(filmId);
-        } else {
-            throw new FilmNotFoundException("Фильм не найден");
-        }
-    }
-
-    public List<Film> getPopularFilms(int count){
-        int filmsHashMapSize = inMemoryFilmStorage.films.size();
-        List<Film> films = new ArrayList<>(inMemoryFilmStorage.films.values());
-        Set<Film> filmSet = new TreeSet<>(comparator);
-        if (count == 10) {
-            if (filmsHashMapSize <= 10) {
-                filmSet.addAll(films);
-                return new ArrayList<>(filmSet);
+    public Film addLike(int filmId, int userId) {
+        if (inMemoryFilmStorage.films.containsKey(filmId)) {
+            if (inMemoryUserStorage.users.containsKey(userId)) {
+                inMemoryFilmStorage.films.get(filmId).addLike(userId);
+                return inMemoryFilmStorage.films.get(filmId);
             } else {
-                filmSet.addAll(films);
-                return filmSet.stream().limit(count).collect(Collectors.toList());
+                throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
             }
+        } else {
+            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не найден", filmId));
         }
-           else if (count > filmsHashMapSize) {
-            filmSet.addAll(films);
-            return filmSet.stream().limit(filmsHashMapSize).collect(Collectors.toList());
-        } else if (count <= filmsHashMapSize) {
-            filmSet.addAll(films);
+    }
+
+    public Film deleteLike(int filmId, int userId) {
+        if (inMemoryFilmStorage.films.containsKey(filmId)) {
+            if (inMemoryUserStorage.users.containsKey(userId)) {
+                if (inMemoryFilmStorage.films.get(filmId).getLikes().remove(userId)) {
+                    return inMemoryFilmStorage.films.get(filmId);
+                } else {
+                    throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден в списке друзей", userId));
+                }
+            } else {
+                throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
+            }
+        } else {
+            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не найден", filmId));
         }
-        return filmSet.stream().limit(count).collect(Collectors.toList());
+    }
+
+    public List<Film> getPopularFilms(int count) {
+        return inMemoryFilmStorage.findAll().stream()
+                .sorted(comparator)
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }

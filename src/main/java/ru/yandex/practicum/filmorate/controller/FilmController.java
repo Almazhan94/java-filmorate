@@ -27,38 +27,38 @@ public class FilmController {
 
     @GetMapping
     public List<Film> findAll() {
-        log.info("количество добавленных фильмов: {}", inMemoryFilmStorage.findAll().size());
+        log.info("Количество добавленных фильмов: {}", inMemoryFilmStorage.findAll().size());
         return inMemoryFilmStorage.findAll();
     }
 
     @GetMapping("/{filmId}")
     public Film findFilmById(@PathVariable int filmId) {
-        log.info("Найден фильм: {}", inMemoryFilmStorage.findFilmById(filmId));
+        log.info("Ищется фильм: {}", inMemoryFilmStorage.findFilmById(filmId));
         return inMemoryFilmStorage.findFilmById(filmId);
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        log.info("Добавлен фильм: {}", film);
+        log.info("Добавляется фильм: {}", film);
         return inMemoryFilmStorage.create(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-        log.info("Обновлен фильм: {}", film);
+        log.info("Обновляется фильм: {}", film);
         return inMemoryFilmStorage.update(film);
     }
 
     @PutMapping("/{filmId}/like/{userId}")
     public Film addLike(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("пользователь поставил лайк фильму: {}", inMemoryFilmStorage.findFilmById(filmId));
+        log.info("Пользователь поставил лайк фильму: {}", inMemoryFilmStorage.findFilmById(filmId));
         filmService.addLike(filmId, userId);
         return inMemoryFilmStorage.findFilmById(filmId);
     }
 
     @DeleteMapping("/{filmId}/like/{userId}")
     public Film deleteFriend(@PathVariable int filmId, @PathVariable int userId) {
-        log.info("пользователь удалил удалил лайк фильму: {}", inMemoryFilmStorage.findFilmById(filmId));
+        log.info("Пользователь удалил лайк фильму: {}", inMemoryFilmStorage.findFilmById(filmId));
         return filmService.deleteLike(filmId, userId);
     }
 

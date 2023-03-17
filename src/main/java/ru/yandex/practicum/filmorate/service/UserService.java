@@ -24,23 +24,32 @@ public class UserService {
     }
 
     public User addFriend(int userId, int friendId) {
-
-        if (inMemoryUserStorage.users.containsKey(userId) && inMemoryUserStorage.users.containsKey(friendId)) {
-            inMemoryUserStorage.users.get(userId).addFriend(friendId);
-            return inMemoryUserStorage.users.get(friendId);
+        if (inMemoryUserStorage.users.containsKey(userId)) {
+            if (inMemoryUserStorage.users.containsKey(friendId)) {
+                inMemoryUserStorage.users.get(userId).addFriend(friendId);
+                return inMemoryUserStorage.users.get(friendId);
+            } else {
+                throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", friendId));
+            }
         } else {
-            throw new UserNotFoundException("Пользователь не найден");
+            throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
         }
     }
 
     public User deleteFriend(int userId, int friendId) {
-        if (inMemoryUserStorage.users.containsKey(userId)
-                && inMemoryUserStorage.users.containsKey(friendId)
-                && inMemoryUserStorage.users.get(userId).getFriends().contains(friendId)) {
-            inMemoryUserStorage.users.get(userId).getFriends().remove(friendId);
-            return inMemoryUserStorage.users.get(friendId);
+        if (inMemoryUserStorage.users.containsKey(userId)) {
+            if (inMemoryUserStorage.users.containsKey(friendId)) {
+                if (inMemoryUserStorage.users.get(userId).getFriends().contains(friendId)) {
+                    inMemoryUserStorage.users.get(userId).getFriends().remove(friendId);
+                    return inMemoryUserStorage.users.get(friendId);
+                } else {
+                    throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден в списке друзей", friendId));
+                }
+            } else {
+                throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", friendId));
+            }
         } else {
-            throw new UserNotFoundException("Пользователь не найден");
+            throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
         }
     }
 
@@ -52,31 +61,18 @@ public class UserService {
             }
             return friends;
         } else {
-            throw new UserNotFoundException("Пользователь не найден");
+            throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
         }
     }
 
     public List<User> getСommonFriends(int userId, int otherId) {
-        List<User> commonFriends = new ArrayList<>();
+        List<User> commonFriends;
         Set<Integer> userFriends = inMemoryUserStorage.users.get(userId).getFriends();
-        Set<Integer> otherFriends = inMemoryUserStorage.users.get(otherId).getFriends();
-        if (inMemoryUserStorage.users.containsKey(userId) && inMemoryUserStorage.users.containsKey(otherId)) {
-
-            for (int i = 0; i < userFriends.size(); i++) {
-
-                int a = new ArrayList<>(userFriends).get(i);
-
-                for (int j = 0; j < otherFriends.size(); j++) {
-                    int b = new ArrayList<>(otherFriends).get(j);
-                    if (a == b) {
-                        commonFriends.add(inMemoryUserStorage.users.get(a));
-                    }
-                }
-            }
-            return commonFriends;
-        } else {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
+        userFriends.retainAll(inMemoryUserStorage.users.get(otherId).getFriends());
+        commonFriends = userFriends.stream()
+                .map(id -> inMemoryUserStorage.users.get(id))
+                .collect(Collectors.toList());
+        return commonFriends;
     }
 
 }
