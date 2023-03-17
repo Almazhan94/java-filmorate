@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class UserService {
     }
 
     public User addFriend(int userId, int friendId) {
+
         if (inMemoryUserStorage.users.containsKey(userId)) {
             if (inMemoryUserStorage.users.containsKey(friendId)) {
                 inMemoryUserStorage.users.get(userId).addFriend(friendId);
@@ -67,8 +69,10 @@ public class UserService {
 
     public List<User> getСommonFriends(int userId, int otherId) {
         List<User> commonFriends;
-        Set<Integer> userFriends = inMemoryUserStorage.users.get(userId).getFriends();
-        userFriends.retainAll(inMemoryUserStorage.users.get(otherId).getFriends());
+
+        Set<Integer> userFriends = new HashSet<>(inMemoryUserStorage.users.get(userId).getFriends());
+        Set<Integer> otherUserFriends = new HashSet<>(inMemoryUserStorage.users.get(otherId).getFriends());
+        userFriends.retainAll(otherUserFriends);
         commonFriends = userFriends.stream()
                 .map(id -> inMemoryUserStorage.users.get(id))
                 .collect(Collectors.toList());
