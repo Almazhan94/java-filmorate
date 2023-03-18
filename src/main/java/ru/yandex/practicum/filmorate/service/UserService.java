@@ -29,6 +29,7 @@ public class UserService {
         if (inMemoryUserStorage.users.containsKey(userId)) {
             if (inMemoryUserStorage.users.containsKey(friendId)) {
                 inMemoryUserStorage.users.get(userId).addFriend(friendId);
+                inMemoryUserStorage.users.get(friendId).addFriend(userId);
                 return inMemoryUserStorage.users.get(friendId);
             } else {
                 throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", friendId));
@@ -43,6 +44,7 @@ public class UserService {
             if (inMemoryUserStorage.users.containsKey(friendId)) {
                 if (inMemoryUserStorage.users.get(userId).getFriends().contains(friendId)) {
                     inMemoryUserStorage.users.get(userId).getFriends().remove(friendId);
+                    inMemoryUserStorage.users.get(friendId).getFriends().remove(userId);
                     return inMemoryUserStorage.users.get(friendId);
                 } else {
                     throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден в списке друзей", friendId));
