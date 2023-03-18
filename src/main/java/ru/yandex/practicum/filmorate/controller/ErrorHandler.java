@@ -51,7 +51,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleUpdateException(final UpdateExсeption e) {
+    public ErrorResponse handleUpdateException(final UpdateException e) {
         log.info(e.getMessage());
         return new ErrorResponse(e.getMessage());
     }

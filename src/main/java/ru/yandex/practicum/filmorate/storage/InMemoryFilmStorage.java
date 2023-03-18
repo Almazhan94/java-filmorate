@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UpdateExсeption;
+import ru.yandex.practicum.filmorate.exception.UpdateException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -28,7 +28,7 @@ public class InMemoryFilmStorage implements FilmStorage{
         if (films.containsKey(filmId)) {
             return films.get(filmId);
         } else {
-            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не существует.",filmId));
+            throw new FilmNotFoundException(String.format("Фильм с идентификатором %d не существует.",filmId));
         }
     }
 
@@ -36,7 +36,7 @@ public class InMemoryFilmStorage implements FilmStorage{
     public Film create(Film film) {
         validator(film);
         if (films.containsKey(film.getId())) {
-            throw new FilmAlreadyExistException(String.format("Фильм с идентификатором %s уже зарегистрирован.", film.getId()));
+            throw new FilmAlreadyExistException(String.format("Фильм с идентификатором %d уже зарегистрирован.", film.getId()));
         }
         film.setId(++filmId);
         films.put(film.getId(), film);
@@ -51,7 +51,7 @@ public class InMemoryFilmStorage implements FilmStorage{
             films.put(id, film);
             return film;
         } else {
-            throw new UpdateExсeption(String.format("Фильм с идентификатором %s не существует.",film.getId()));
+            throw new UpdateException(String.format("Фильм с идентификатором %d не существует.",film.getId()));
         }
     }
 

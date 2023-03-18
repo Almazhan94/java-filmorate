@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.UpdateExсeption;
+import ru.yandex.practicum.filmorate.exception.UpdateException;
 import ru.yandex.practicum.filmorate.exception.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -28,7 +28,7 @@ public class InMemoryUserStorage implements UserStorage{
         if (users.containsKey(userId)) {
             return users.get(userId);
         } else {
-            throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не существует", userId));
+            throw new UserNotFoundException(String.format("Пользователь с идентификатором %d не существует", userId));
         }
     }
 
@@ -51,7 +51,7 @@ public class InMemoryUserStorage implements UserStorage{
         if (users.containsKey(id)) {
             users.put(id, user);
         } else {
-            throw new UpdateExсeption(String.format("Пользователь с идентификатором %s не существует", id));
+            throw new UpdateException(String.format("Пользователь с идентификатором %d не существует", id));
         }
         return user;
     }

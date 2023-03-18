@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
@@ -38,31 +38,19 @@ public class FilmService {
     }
 
     public Film addLike(int filmId, int userId) {
-        if (inMemoryFilmStorage.films.containsKey(filmId)) {
-            if (inMemoryUserStorage.users.containsKey(userId)) {
-                inMemoryFilmStorage.films.get(filmId).addLike(userId);
-                return inMemoryFilmStorage.films.get(filmId);
-            } else {
-                throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
-            }
-        } else {
-            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не найден", filmId));
-        }
+        Film film = inMemoryFilmStorage.findFilmById(filmId);
+        User user = inMemoryUserStorage.findUserById(userId);
+        film.addLike(userId);
+        return film;
     }
 
     public Film deleteLike(int filmId, int userId) {
-        if (inMemoryFilmStorage.films.containsKey(filmId)) {
-            if (inMemoryUserStorage.users.containsKey(userId)) {
-                if (inMemoryFilmStorage.films.get(filmId).getLikes().remove(userId)) {
-                    return inMemoryFilmStorage.films.get(filmId);
-                } else {
-                    throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден в списке друзей", userId));
-                }
-            } else {
-                throw new UserNotFoundException(String.format("Пользователь с идентификатором %s не найден", userId));
-            }
+        Film film = inMemoryFilmStorage.findFilmById(filmId);
+        User user = inMemoryUserStorage.findUserById(userId);
+        if (film.getLikes().remove(userId)) {
+            return film;
         } else {
-            throw new FilmNotFoundException(String.format("Фильм с идентификатором %s не найден", filmId));
+            throw new UserNotFoundException(String.format("Пользователь с идентификатором %d не найден в списке лайков у фильма %d", userId, filmId));
         }
     }
 
