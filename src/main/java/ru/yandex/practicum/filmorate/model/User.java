@@ -7,11 +7,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class User {
 
     int id;
+
+    Set<Integer> friends = new HashSet<>();
 
     @Email
     String email;
@@ -24,4 +28,8 @@ public class User {
 
     @NotNull
     LocalDate birthday;
+
+    public void addFriend(int friendId) {
+        friends.add(friendId);
+    }
 }
