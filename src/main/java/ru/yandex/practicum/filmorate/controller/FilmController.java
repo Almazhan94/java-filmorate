@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,17 +56,18 @@ public class FilmController {
         log.info("Пользователь поставил лайк фильму: {}", filmDbStorage.findFilmById(filmId));
         return filmService.addLike(filmId, userId);
     }
-      @DeleteMapping("/films/{filmId}/like/{userId}")
-      public Film deleteFriend(@PathVariable int filmId, @PathVariable int userId) {
-      log.info("Пользователь удалил лайк фильму: {}", filmDbStorage.findFilmById(filmId));
-      return filmService.deleteLike(filmId, userId);
-      }
 
-      @GetMapping("/films/popular")
-      public List<Film> getPopularFilms(@RequestParam(value = "count", required = false, defaultValue = "10") int count) {
-      log.info("Список самых популярных фильмов: {}", filmService.getPopularFilms(count));
-      return filmService.getPopularFilms(count);
-      }
+    @DeleteMapping("/films/{filmId}/like/{userId}")
+    public Film deleteFriend(@PathVariable int filmId, @PathVariable int userId) {
+        log.info("Пользователь удалил лайк фильму: {}", filmDbStorage.findFilmById(filmId));
+        return filmService.deleteLike(filmId, userId);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> getPopularFilms(@RequestParam(value = "count", required = false, defaultValue = "10") int count) {
+        log.info("Список самых популярных фильмов: {}", filmService.getPopularFilms(count));
+        return filmService.getPopularFilms(count);
+    }
 
     @GetMapping("/mpa")
     public List<Mpa> getMpa() {

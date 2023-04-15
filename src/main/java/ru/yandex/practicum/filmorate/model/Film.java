@@ -39,9 +39,11 @@ public class Film {
     public void addLike(int userId) {
         likes.add(userId);
     }
+
     public void addGenre(List<Genre> genreList) {
         genres = new HashSet<>(genreList);
     }
+
     public void deleteGenre(Genre genre) {
         genres.remove(genre);
     }

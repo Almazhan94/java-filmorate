@@ -3,14 +3,11 @@ package ru.yandex.practicum.filmorate.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,7 +21,7 @@ public class UserController {
     UserService userService;
 
     @Autowired
-    public UserController( UserDbStorage userDbStorage, UserService userService) {
+    public UserController(UserDbStorage userDbStorage, UserService userService) {
         this.userDbStorage = userDbStorage;
         this.userService = userService;
     }
