@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +21,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class UserIntegrationTest {
     private final UserDbStorage userStorage;
-    User user;
+    User user = User.builder()
+           .name("dolore ullamco")
+           .email("yandex@mail.ru")
+           .login("dolore")
+           .birthday(LocalDate.of(1980, 8, 20))
+           .build();
 
     @BeforeEach
     void setUp() {
-         user = User.builder()
-                .name("dolore ullamco")
-                .email("yandex@mail.ru")
-                .login("dolore")
-                .birthday(LocalDate.of(1980, 8, 20))
-                .build();
         userStorage.create(user);
     }
 

@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@FieldDefaults(makeFinal=true, level= AccessLevel.PRIVATE)
 public class FilmIntegrationTest {
 
     private final FilmDbStorage filmStorage;
-    Film film;
+    Film film = Film.builder()
+            .name("nisi eiusmod")
+            .description("adipisicing")
+            .releaseDate(LocalDate.of(1980, 8, 20))
+            .duration(100)
+            .mpa(Mpa.builder().id(1).name("P").build())
+            .build();
 
     @BeforeEach
     void setUp() {
-        film =  Film.builder()
-                .name("nisi eiusmod")
-                .description("adipisicing")
-                .releaseDate(LocalDate.of(1980, 8, 20))
-                .duration(100)
-                .mpa(Mpa.builder().id(1).name("P").build())
-                .build();
 
         filmStorage.create(film);
     }
