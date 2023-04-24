@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class InMemoryFilmStorage implements FilmStorage{
+public class InMemoryFilmStorage implements FilmStorage {
 
     public final HashMap<Integer, Film> films = new HashMap<>();
     private int filmId = 0;
